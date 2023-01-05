@@ -13,6 +13,6 @@ class TestHomepage:
 
     def test_nav_links(self):
         homepage_nav = HomepageNav(self.driver)
-        actual_links = homepage_nav.get_nav_links_text()
-        expected_links = homepage_nav.NAV_LINK_TEXT
-        assert expected_links == actual_links, 'Validating nav links text'
+        actual_links = homepage_nav.get_nav_links_text()  # результат работы алгоритма
+        expected_links = homepage_nav.NAV_LINK_TEXT  # верный результат
+        assert expected_links == actual_links, 'Validating nav links text'  # проверка

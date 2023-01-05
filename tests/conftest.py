@@ -3,31 +3,35 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as chrome_options
 
 
-# MVP
+# MVP. В этом файле задаются настройки тестирования
 
 
 @pytest.fixture
 def get_chrome_options():
+    #  получение опций браузера
     options = chrome_options()
-    options.add_argument('chrome')  # use headless if u don't need a browser UI
-    options.add_argument('--start-maximized')  # окно открывается. как F11
-    options.add_argument('--window-size=1650,900')  # разрешение окна
+    options.add_argument('headless')  # use headless if u don't need a browser UI
+    # options.add_argument('--start-maximized')  # окно открывается. как F11
+    # options.add_argument('--window-size=1280,720')  # разрешение окна
     return options
 
 
 @pytest.fixture()
 def get_webdriver(get_chrome_options):
+    # получение драйвера браузера при заданных опциях
     options = get_chrome_options
     driver = webdriver.Chrome(options=options)
     return driver
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='function')  # scope ??
 def setup(request, get_webdriver):
-    driver = get_webdriver
-    url = 'https://www.macys.com/'
+    # получение драйвера и отправление запроса на сайт
+    driver = get_webdriver  # драйвер получается из метода
+    url = 'https://www.macys.com/'  # задается url сайта, на котором будет проводиться тест.
+    # Можно driver.get('https://www.macys.com/')
     if request.cls is not None:
         request.cls.driver = driver
     driver.get(url)
-    yield driver
-    driver.quit()
+    yield driver  # возврат driver, но не знаю почему используется yield
+    driver.quit()  # закрытие всех окон, можно использовать driver.close(), но тогда закроется только одна вкладка теста
