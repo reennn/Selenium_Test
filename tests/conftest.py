@@ -10,9 +10,9 @@ from selenium.webdriver.chrome.options import Options as chrome_options
 def get_chrome_options():
     #  получение опций браузера
     options = chrome_options()
-    options.add_argument('headless')  # use headless if u don't need a browser UI
-    # options.add_argument('--start-maximized')  # окно открывается. как F11
-    # options.add_argument('--window-size=1280,720')  # разрешение окна
+    options.add_argument('chrome')  # use headless if u don't need a browser UI
+    options.add_argument('--start-maximized')  # окно открывается. как F11
+    options.add_argument('--window-size=1280,720')  # разрешение окна
     return options
 
 
@@ -33,5 +33,6 @@ def setup(request, get_webdriver):
     if request.cls is not None:
         request.cls.driver = driver
     driver.get(url)
+    driver.delete_all_cookies()
     yield driver  # возврат driver, но не знаю почему используется yield
     driver.quit()  # закрытие всех окон, можно использовать driver.close(), но тогда закроется только одна вкладка теста

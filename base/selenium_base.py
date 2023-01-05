@@ -1,3 +1,4 @@
+from selenium.common import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -9,7 +10,7 @@ class SeleniumBase:
 
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10, 1)  # ожидание для тестирования
+        self.__wait = WebDriverWait(driver, 10, 0.3)  # ожидание для тестирования
         # Используется для  прогрузки всех элементов на странице
 
     @staticmethod # хз. почему так, но работает
@@ -30,25 +31,32 @@ class SeleniumBase:
 
     # метод для определения видимости элемента
     def is_visible(self, find_by: str, locator: str, locator_name: str = None) -> WebElement:
-        return self.wait.until(ec.visibility_of_element_located((self.__get_selenium_by(find_by), locator)),
-                               locator_name)
+        return self.__wait.until(ec.visibility_of_element_located((self.__get_selenium_by(find_by), locator)),
+                                 locator_name)
 
     # метод для определения нахождения элемента (есть/нет)
     def is_present(self, find_by: str, locator: str, locator_name: str = None) -> WebElement:
-        return self.wait.until(ec.presence_of_element_located((self.__get_selenium_by(find_by), locator)),
-                               locator_name)
+        return self.__wait.until(ec.presence_of_element_located((self.__get_selenium_by(find_by), locator)),
+                                 locator_name)
 
     # метод для определения нахождения элемента (есть/нет)
     def is_not_present(self, find_by: str, locator: str, locator_name: str = None) -> WebElement:
-        return self.wait.until(ec.invisibility_of_element_located((self.__get_selenium_by(find_by), locator)),
-                               locator_name)
+        return self.__wait.until(ec.invisibility_of_element_located((self.__get_selenium_by(find_by), locator)),
+                                 locator_name)
 
     # метод для определения видимости элементов!
     def are_visible(self, find_by: str, locator: str, locator_name: str = None) -> List[WebElement]:
-        return self.wait.until(ec.visibility_of_all_elements_located((self.__get_selenium_by(find_by), locator)),
-                               locator_name)
+        return self.__wait.until(ec.visibility_of_all_elements_located((self.__get_selenium_by(find_by), locator)),
+                                 locator_name)
 
     # метод для определения нахождения элементов (есть/нет)
     def are_present(self, find_by: str, locator: str, locator_name: str = None) -> List[WebElement]:
-        return self.wait.until(ec.presence_of_all_elements_located((self.__get_selenium_by(find_by), locator)),
-                               locator_name)
+        return self.__wait.until(ec.presence_of_all_elements_located((self.__get_selenium_by(find_by), locator)),
+                                 locator_name)
+
+    def get_text_from_webelements(self, elements: List[WebElement]) -> List[str]:
+        return [element.text for element in elements]  # list comprehension
+
+    def get_element_by_text(self, elements: List[WebElement], name: str) -> WebElement:
+        name = name.lower()
+        return [element for element in elements if element.text.lower() == name][0]
