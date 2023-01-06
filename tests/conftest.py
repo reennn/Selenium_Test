@@ -33,6 +33,6 @@ def setup(request, get_webdriver):
     if request.cls is not None:
         request.cls.driver = driver
     driver.get(url)
-    driver.delete_all_cookies()
+    driver.delete_all_cookies()  # используется, потому что сайт ограничивает доступ к ресурсам из-за автоматизированного тестирования
     yield driver  # возврат driver, но не знаю почему используется yield
     driver.quit()  # закрытие всех окон, можно использовать driver.close(), но тогда закроется только одна вкладка теста

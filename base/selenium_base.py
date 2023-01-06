@@ -54,9 +54,11 @@ class SeleniumBase:
         return self.__wait.until(ec.presence_of_all_elements_located((self.__get_selenium_by(find_by), locator)),
                                  locator_name)
 
+    # метод получения текста из веб-элементов
     def get_text_from_webelements(self, elements: List[WebElement]) -> List[str]:
         return [element.text for element in elements]  # list comprehension
 
+    # метод нахождения элемента (из списка) по имени
     def get_element_by_text(self, elements: List[WebElement], name: str) -> WebElement:
         name = name.lower()
         return [element for element in elements if element.text.lower() == name][0]
