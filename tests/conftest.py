@@ -1,6 +1,9 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as chrome_options
+from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
+
+from abstract.selenium_listener import MyListener
 
 
 # MVP. В этом файле задаются настройки тестирования
@@ -28,11 +31,12 @@ def get_webdriver(get_chrome_options):
 def setup(request, get_webdriver):
     # получение драйвера и отправление запроса на сайт
     driver = get_webdriver  # драйвер получается из метода
+    driver = EventFiringWebDriver(driver, MyListener())  # создание объекта класса MyListener
     url = 'https://www.macys.com/'  # задается url сайта, на котором будет проводиться тест.
     # Можно driver.get('https://www.macys.com/')
     if request.cls is not None:
         request.cls.driver = driver
     driver.get(url)
-    driver.delete_all_cookies()  # используется, потому что сайт ограничивает доступ к ресурсам из-за автоматизированного тестирования
+    # driver.delete_all_cookies()  # используется, потому что сайт ограничивает доступ к ресурсам из-за автоматизированного тестирования
     yield driver  # возврат driver, но не знаю почему используется yield
     driver.quit()  # закрытие всех окон, можно использовать driver.close(), но тогда закроется только одна вкладка теста
